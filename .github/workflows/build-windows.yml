@@ -1,0 +1,11 @@
+name: Build on Windows
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    uses: ./.github/workflows/template.yml
+    with:
+      os: windows-latest
+      c_compiler: cl
+      cpp_compiler: cl
