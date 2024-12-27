@@ -6,7 +6,7 @@
 ## 
 #############################################################################
 
-project("sample-tools-test")
+project("simple-cryptography-test")
 message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
@@ -18,12 +18,10 @@ find_package(GTest CONFIG REQUIRED)
 add_executable(${PROJECT_NAME}
     common_test.cpp
     fmt_test.cpp
-    hardware_test.cpp
-    platform_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE sample-tools
+    PRIVATE simple-cryptography-lib
     PRIVATE GTest::gtest_main
 )
 

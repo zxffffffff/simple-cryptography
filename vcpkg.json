@@ -3,11 +3,11 @@
   "name": "start-cpp-vcpkg-template",
   "version-string": "0.1.0",
   "dependencies": [
-    "gflags",
-    "glog",
+    "fmt",
     "gtest",
-    "nlohmann-json",
-    "tinyxml2",
-    "fmt"
+    "boost-algorithm",
+    "cryptopp",
+    "zlib",
+    "snappy"
   ]
 }

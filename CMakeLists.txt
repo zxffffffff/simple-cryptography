@@ -6,9 +6,9 @@
 ## 
 #############################################################################
 
-message("[start-cpp-vcpkg-template] -------- start")
-cmake_minimum_required(VERSION 3.7.2)
-set(CMAKE_CXX_STANDARD 11)
+message("[simple-cryptography] -------- start")
+cmake_minimum_required(VERSION 3.12)
+set(CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED ON)
 
 if (WIN32)
@@ -37,7 +37,7 @@ else()
 endif()
 
 # 可选 vcpkg 编译配置集: https://learn.microsoft.com/en-us/vcpkg/users/triplets
-message(STATUS "[start-cpp-vcpkg-template] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
+message(STATUS "[simple-cryptography] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
 if(DEFINED ENV{VCPKG_ROOT})
@@ -57,26 +57,22 @@ else()
     endif()
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 endif()
-message(STATUS "[start-cpp-vcpkg-template] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "[simple-cryptography] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
 
-project ("start-cpp-vcpkg-template")
+project ("simple-cryptography")
 
-message(STATUS "[start-cpp-vcpkg-template] CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
-message(STATUS "[start-cpp-vcpkg-template] CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-message(STATUS "[start-cpp-vcpkg-template] CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
-message(STATUS "[start-cpp-vcpkg-template] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[simple-cryptography] CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "[simple-cryptography] CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message(STATUS "[simple-cryptography] CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "[simple-cryptography] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # src
-include_directories(${PROJECT_SOURCE_DIR}/sample-tools)
-include_directories(${PROJECT_SOURCE_DIR}/sample-dynamic-lib)
-include_directories(${PROJECT_SOURCE_DIR}/sample-main)
-add_subdirectory(sample-tools)
-add_subdirectory(sample-dynamic-lib)
-add_subdirectory(sample-main)
+include_directories(${PROJECT_SOURCE_DIR}/src)
+add_subdirectory(src)
 
 # test
 include(CTest) # 支持 ctest 命令
-include_directories(${PROJECT_SOURCE_DIR}/sample-tools-test)
-add_subdirectory(sample-tools-test)
+include_directories(${PROJECT_SOURCE_DIR}/test)
+add_subdirectory(test)
 
-message("[start-cpp-vcpkg-template] -------- done")
+message("[simple-cryptography] -------- done")
