@@ -33,6 +33,14 @@ message(STATUS "[${PROJECT_NAME}] ZLIB_LIBRARIES : ${ZLIB_LIBRARIES}")
 # 引入 snappy
 find_package(Snappy CONFIG REQUIRED)
 
+# 引入 secp256k1
+FetchContent_Declare(
+    secp256k1
+    GIT_REPOSITORY https://github.com/zxffffffff/secp256k1.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(secp256k1)
+
 # Public 头文件
 file(GLOB_RECURSE include_headers
     cpp_version.h
@@ -51,10 +59,12 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC cryptopp::cryptopp
     PUBLIC ZLIB::ZLIB
     PUBLIC Snappy::snappy
+    PUBLIC secp256k1
 )
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
+    PUBLIC ${secp256k1_SOURCE_DIR}
 )
 
 set_target_properties(${PROJECT_NAME}
