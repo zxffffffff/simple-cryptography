@@ -16,6 +16,7 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}
+    Cryptography_test.cpp
     SecurityBuffer_test.cpp
 )
 

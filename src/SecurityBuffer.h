@@ -20,14 +20,13 @@ class SecurityBuffer
 {
 private:
     StringBuffer encryptedData;
-    StringBuffer iv; // 初始化向量
+    StringBuffer iv;
     StringBuffer key;
 
 public:
     SecurityBuffer(const StringBuffer &data)
-        : key(Cryptography::AES::GenerateKey(32)), iv(Cryptography::AES::GenerateIV(AES_BLOCK_SIZE))
+        : key(Cryptography::AES::GenerateKey(256)), iv(Cryptography::AES::GenerateIV(AES_BLOCK_SIZE))
     {
-        // 使用 256 位密钥
         encryptedData = Cryptography::AES::Encrypt(key, iv, data);
     }
 
