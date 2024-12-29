@@ -25,7 +25,7 @@ private:
 
 public:
     SecurityBuffer(const StringBuffer &data)
-        : key(Cryptography::AES::GenerateKey(256)), iv(Cryptography::AES::GenerateIV(AES_BLOCK_SIZE))
+        : key(Cryptography::AES::GenerateKey()), iv(Cryptography::AES::GenerateIV())
     {
         encryptedData = Cryptography::AES::Encrypt(key, iv, data);
     }

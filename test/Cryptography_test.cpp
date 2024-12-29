@@ -25,10 +25,11 @@ TEST(Cryptography, test)
 
     for (int i = 0; i < 25; ++i)
     {
-        StringBuffer buf(str.data(), str.size());
-        StringBuffer iv = Cryptography::AES::GenerateIV(AES_BLOCK_SIZE);
         constexpr size_t keyLength = 256;
+        constexpr size_t ivLength = 16;
         StringBuffer key = Cryptography::AES::GenerateKey(keyLength);
+        StringBuffer iv = Cryptography::AES::GenerateIV(ivLength);
+        StringBuffer buf(str.data(), str.size());
 
         Chrono chrono;
         StringBuffer encryptedData = Cryptography::AES::Encrypt(key, iv, buf);
@@ -38,18 +39,20 @@ TEST(Cryptography, test)
         StringBuffer buf2 = Cryptography::AES::Decrypt(key, iv, encryptedData);
         chrono2.stop();
 
-        /* x64 Debug
-         * keyLength=256, buf=1.00KB, encrypt=0.03ms, decrypt=0.01ms
-         * keyLength=256, buf=1.00MB, encrypt=1.81ms, decrypt=1.16ms
-         * keyLength=256, buf=1.00GB, encrypt=1.28s, decrypt=1.69s
-         *
-         * x64 Release
+        /*
+         * Laptop x64-windows Release
          * keyLength=256, buf=1.00KB, encrypt=0.01ms, decrypt=0.01ms
          * keyLength=256, buf=1.00MB, encrypt=2.39ms, decrypt=1.91ms
          * keyLength=256, buf=1.00GB, encrypt=1.27s, decrypt=1.07s
+         *
+         * Desktop arm64-osx Release
+         * keyLength=256, buf=1.00KB, encrypt=0.00ms, decrypt=0.00ms
+         * keyLength=256, buf=1.00MB, encrypt=0.88ms, decrypt=0.20ms
+         * keyLength=256, buf=1.00GB, encrypt=915.64ms, decrypt=321.96ms
          */
-        fmt::print("keyLength={}, buf={}, encrypt={}, decrypt={} \n",
+        fmt::print("key={}, iv={}, buf={}, encrypt={}, decrypt={} \n",
                    keyLength,
+                   ivLength,
                    Common::FormatBytes(buf.Size()),
                    Common::FormatMillisecons(chrono.use_time()),
                    Common::FormatMillisecons(chrono2.use_time()));

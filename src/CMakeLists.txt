@@ -66,7 +66,7 @@ file(GLOB_RECURSE include_headers
 )
 
 add_library(${PROJECT_NAME} STATIC
-    sample/sample_tools.cpp # needed
+    Cryptography.cpp
     ${include_headers}
 )
 

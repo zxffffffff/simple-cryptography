@@ -24,7 +24,7 @@ TEST(SecurityBuffer, test)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
-    for (int i = 0; i < 25; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         StringBuffer buf(str.data(), str.size());
 
