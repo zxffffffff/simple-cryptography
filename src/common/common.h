@@ -173,4 +173,29 @@ public:
         buf = str;
         return buf.data();
     }
+
+    /* 字节数转换 */
+    static std::string FormatBytes(size_t bytes)
+    {
+        const char *units[] = {"B", "KB", "MB", "GB", "TB", "PB"};
+        size_t unitIndex = 0;
+        double size = static_cast<double>(bytes);
+
+        while (size >= 1024 && unitIndex < 5)
+        {
+            size /= 1024;
+            ++unitIndex;
+        }
+
+        std::ostringstream oss;
+        if (unitIndex == 0)
+        {
+            oss << static_cast<size_t>(size) << " " << units[unitIndex];
+        }
+        else
+        {
+            oss << std::fixed << std::setprecision(2) << size << " " << units[unitIndex];
+        }
+        return oss.str();
+    }
 };

@@ -60,9 +60,9 @@ file(GLOB_RECURSE include_headers
     common/cpp_def.h
     common/common.h
     common/chrono.h
-    GlobalDef.h
-    SecurityData.h
+    StringBuffer.h
     Cryptography.h
+    SecurityBuffer.h
 )
 
 add_library(${PROJECT_NAME} STATIC
