@@ -42,7 +42,9 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/zxffffffff/secp256k1.git
     GIT_TAG master
 )
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 FetchContent_MakeAvailable(secp256k1)
+unset(BUILD_SHARED_LIBS CACHE)
 message(STATUS "[${PROJECT_NAME}] secp256k1_SOURCE_DIR : ${secp256k1_SOURCE_DIR}")
 
 # 引入 sss

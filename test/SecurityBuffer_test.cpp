@@ -7,7 +7,6 @@
 ****************************************************************************/
 #include "gtest/gtest.h"
 #include "fmt/format.h"
-
 #include "SecurityBuffer.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)

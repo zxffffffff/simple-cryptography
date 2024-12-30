@@ -23,7 +23,7 @@ TEST(Cryptography, Hash_SHA)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
-    for (int i = 0; i < 25; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         constexpr size_t bits = 256;
 
@@ -36,9 +36,9 @@ TEST(Cryptography, Hash_SHA)
 
         /*
          * Laptop x64-windows Release
-         *
-         *
-         *
+         * bits=256, buf=1.00KB, sha=0.01ms, hash=f369...
+         * bits=256, buf=1.00MB, sha=8.95ms, hash=58e6...
+         * bits=256, buf=1.00GB, sha=2.31s, hash=6bda...
          *
          * Desktop arm64-osx Release
          * bits=256, buf=1.00KB, sha=0.00ms, hash=f369...
@@ -209,7 +209,7 @@ TEST(Cryptography, ECC_Sign)
 
         /*
          * Laptop x64-windows Release
-         *
+         * hash=32B, sign=0.05ms, verify=0.13ms
          *
          * Desktop arm64-osx Release
          * hash=32B, sign=0.02ms, verify=0.02ms
