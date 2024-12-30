@@ -19,7 +19,7 @@
 
 using namespace std::literals::chrono_literals;
 
-TEST(Cryptography, AES)
+TEST(Cryptography, AES_Encrypt)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
@@ -64,7 +64,7 @@ TEST(Cryptography, AES)
     }
 }
 
-TEST(Cryptography, RSA)
+TEST(Cryptography, RSA_Encrypt)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
@@ -106,6 +106,50 @@ TEST(Cryptography, RSA)
 
         EXPECT_EQ(buf, buf2);
         EXPECT_NE(buf, encryptedData);
+        str += str;
+    }
+}
+
+TEST(Cryptography, RSA_Sign)
+{
+    std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
+
+    for (int i = 0; i < 25; ++i)
+    {
+        constexpr size_t bits = 2048;
+        std::pair<StringBuffer, StringBuffer> keyPair = Cryptography::RSA::GenerateKey(bits);
+        StringBuffer &privateKey = keyPair.first;
+        StringBuffer &publicKey = keyPair.second;
+
+        StringBuffer buf(str.data(), str.size());
+
+        Chrono chrono;
+        StringBuffer signature = Cryptography::RSA::Sign(privateKey, buf);
+        chrono.stop();
+
+        Chrono chrono2;
+        bool ok = Cryptography::RSA::Verify(publicKey, buf, signature);
+        chrono2.stop();
+
+        /*
+         * Laptop x64-windows Release
+         *
+         *
+         *
+         *
+         * Desktop arm64-osx Release
+         * bits=2048, buf=1.00KB, sign=0.84ms, verify=0.05ms
+         * bits=2048, buf=1.00MB, sign=1.17ms, verify=0.44ms
+         * bits=2048, buf=1.00GB, sign=407.62ms, verify=409.73ms
+         */
+        fmt::print("bits={}, buf={}, sign={}, verify={} \n",
+                   bits,
+                   Common::FormatBytes(buf.Size()),
+                   Common::FormatMillisecons(chrono.use_time()),
+                   Common::FormatMillisecons(chrono2.use_time()));
+
+        EXPECT_TRUE(ok);
+        EXPECT_NE(buf, signature);
         str += str;
     }
 }

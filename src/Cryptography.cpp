@@ -116,18 +116,18 @@ static std::string getOpenSSLError()
 StringBuffer evp_pkey_to_pem(EVP_PKEY *pkey, bool is_private)
 {
     if (!pkey)
-        return {};
+        throw std::runtime_error("Invalid pkey");
 
     BIO *mem = BIO_new(BIO_s_mem());
     if (!mem)
-        return {};
+        throw std::runtime_error("BIO_new failed");
 
     if (is_private)
     {
         if (!PEM_write_bio_PrivateKey(mem, pkey, NULL, NULL, 0, NULL, NULL))
         {
             BIO_free(mem);
-            return {};
+            throw std::runtime_error("PEM_write_bio_PrivateKey failed");
         }
     }
     else
@@ -135,7 +135,7 @@ StringBuffer evp_pkey_to_pem(EVP_PKEY *pkey, bool is_private)
         if (!PEM_write_bio_PUBKEY(mem, pkey))
         {
             BIO_free(mem);
-            return {};
+            throw std::runtime_error("PEM_write_bio_PUBKEY failed");
         }
     }
 
@@ -153,11 +153,11 @@ std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)> pem_to_evp_pkey(const Stri
     std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)> pkey_{nullptr, ::EVP_PKEY_free};
 
     if (pem_string.Empty())
-        return pkey_;
+        throw std::runtime_error("Invalid pem_string");
 
     BIO *mem = BIO_new_mem_buf(pem_string.Data(), (int)pem_string.Size());
     if (!mem)
-        return pkey_;
+        throw std::runtime_error("BIO_new_mem_buf failed");
 
     EVP_PKEY *pkey = NULL;
     if (is_private)
@@ -319,4 +319,68 @@ StringBuffer Cryptography::RSA::Decrypt(const StringBuffer &pem_private_key, con
     }
     EVP_PKEY_CTX_free(ctx);
     return decryptedText;
+}
+
+StringBuffer Cryptography::RSA::Sign(const StringBuffer &pem_private_key, const StringBuffer &text)
+{
+    std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)> privateKey_ = pem_to_evp_pkey(pem_private_key, true);
+
+    EVP_MD_CTX *md_ctx = EVP_MD_CTX_new();
+    if (!md_ctx)
+        throw std::runtime_error("EVP_MD_CTX_new failed");
+
+    if (EVP_DigestSignInit(md_ctx, NULL, EVP_sha256(), NULL, privateKey_.get()) <= 0)
+    {
+        EVP_MD_CTX_free(md_ctx);
+        throw std::runtime_error("EVP_DigestSignInit failed");
+    }
+
+    if (EVP_DigestSignUpdate(md_ctx, text.Data(), text.Size()) <= 0)
+    {
+        EVP_MD_CTX_free(md_ctx);
+        throw std::runtime_error("EVP_DigestSignUpdate failed");
+    }
+
+    size_t sig_len = 0;
+    if (EVP_DigestSignFinal(md_ctx, NULL, &sig_len) <= 0)
+    {
+        EVP_MD_CTX_free(md_ctx);
+        throw std::runtime_error("EVP_DigestSignFinal failed");
+    }
+
+    StringBuffer signature(sig_len);
+    if (EVP_DigestSignFinal(md_ctx, signature.Data(), &sig_len) <= 0)
+    {
+        EVP_MD_CTX_free(md_ctx);
+        throw std::runtime_error("EVP_DigestSignFinal failed");
+    }
+
+    EVP_MD_CTX_free(md_ctx);
+    return signature;
+}
+
+bool Cryptography::RSA::Verify(const StringBuffer &pem_public_key, const StringBuffer &text, const StringBuffer &signature)
+{
+    std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)> publicKey_ = pem_to_evp_pkey(pem_public_key, false);
+
+    EVP_MD_CTX *md_ctx = EVP_MD_CTX_new();
+    if (!md_ctx)
+        throw std::runtime_error("EVP_MD_CTX_new failed");
+
+    if (EVP_DigestVerifyInit(md_ctx, NULL, EVP_sha256(), NULL, publicKey_.get()) <= 0)
+    {
+        EVP_MD_CTX_free(md_ctx);
+        throw std::runtime_error("EVP_DigestVerifyInit failed");
+    }
+
+    if (EVP_DigestVerifyUpdate(md_ctx, text.Data(), text.Size()) <= 0)
+    {
+        EVP_MD_CTX_free(md_ctx);
+        throw std::runtime_error("EVP_DigestVerifyUpdate failed");
+    }
+
+    int ret = EVP_DigestVerifyFinal(md_ctx, signature.Data(), signature.Size());
+    EVP_MD_CTX_free(md_ctx);
+
+    return ret == 1; // 返回 1 表示验证成功
 }

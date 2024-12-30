@@ -42,5 +42,9 @@ public:
         // 加密/解密 (RSA_PKCS1_OAEP_PADDING 4)
         static StringBuffer Encrypt(const StringBuffer &pem_public_key, const StringBuffer &plainText, int pad_mode = 4);
         static StringBuffer Decrypt(const StringBuffer &pem_private_key, const StringBuffer &cipherText, int pad_mode = 4);
+
+        // 签名/验签
+        static StringBuffer Sign(const StringBuffer &pem_private_key, const StringBuffer &text);
+        static bool Verify(const StringBuffer &pem_public_key, const StringBuffer &text, const StringBuffer &signature);
     };
 };
