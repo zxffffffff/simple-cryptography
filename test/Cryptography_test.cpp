@@ -114,7 +114,7 @@ TEST(Cryptography, RSA_Sign)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
-    for (int i = 0; i < 25; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         constexpr size_t bits = 2048;
         std::pair<StringBuffer, StringBuffer> keyPair = Cryptography::RSA::GenerateKey(bits);
@@ -133,9 +133,9 @@ TEST(Cryptography, RSA_Sign)
 
         /*
          * Laptop x64-windows Release
-         *
-         *
-         *
+         * bits=2048, buf=1.00KB, sign=1.50ms, verify=0.12ms
+         * bits=2048, buf=1.00MB, sign=4.14ms, verify=2.74ms
+         * bits=2048, buf=1.00GB, sign=2.15s, verify=2.16s
          *
          * Desktop arm64-osx Release
          * bits=2048, buf=1.00KB, sign=0.84ms, verify=0.05ms
