@@ -19,6 +19,44 @@
 
 using namespace std::literals::chrono_literals;
 
+TEST(Cryptography, Hash_SHA)
+{
+    std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
+
+    for (int i = 0; i < 25; ++i)
+    {
+        constexpr size_t bits = 256;
+
+        StringBuffer buf(str.data(), str.size());
+
+        Chrono chrono;
+        StringBuffer hash = Cryptography::Hash::SHA(buf, bits);
+        StringBuffer hash2 = Cryptography::Hash::SHA(buf, bits);
+        chrono.stop();
+
+        /*
+         * Laptop x64-windows Release
+         *
+         *
+         *
+         *
+         * Desktop arm64-osx Release
+         * bits=256, buf=1.00KB, sha=0.00ms, hash=f369...
+         * bits=256, buf=1.00MB, sha=0.43ms, hash=58e6...
+         * bits=256, buf=1.00GB, sha=407.88ms, hash=6bda...
+         */
+        fmt::print("bits={}, buf={}, sha={}, hash={} \n",
+                   bits,
+                   Common::FormatBytes(buf.Size()),
+                   Common::FormatMillisecons(chrono.use_time() / 2),
+                   Cryptography::Hash::ToString(hash));
+
+        EXPECT_EQ(hash, hash2);
+        EXPECT_NE(buf, hash);
+        str += str;
+    }
+}
+
 TEST(Cryptography, AES_Encrypt)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
@@ -72,9 +110,7 @@ TEST(Cryptography, RSA_Encrypt)
     {
         constexpr size_t bits = 2048;
         constexpr int pad_mode = 4;
-        std::pair<StringBuffer, StringBuffer> keyPair = Cryptography::RSA::GenerateKey(bits);
-        StringBuffer &privateKey = keyPair.first;
-        StringBuffer &publicKey = keyPair.second;
+        auto [privateKey, publicKey] = Cryptography::RSA::GenerateKey(bits);
 
         StringBuffer buf(str.data(), str.size());
 
@@ -117,9 +153,7 @@ TEST(Cryptography, RSA_Sign)
     for (int i = 0; i < 10; ++i)
     {
         constexpr size_t bits = 2048;
-        std::pair<StringBuffer, StringBuffer> keyPair = Cryptography::RSA::GenerateKey(bits);
-        StringBuffer &privateKey = keyPair.first;
-        StringBuffer &publicKey = keyPair.second;
+        auto [privateKey, publicKey] = Cryptography::RSA::GenerateKey(bits);
 
         StringBuffer buf(str.data(), str.size());
 
@@ -145,6 +179,43 @@ TEST(Cryptography, RSA_Sign)
         fmt::print("bits={}, buf={}, sign={}, verify={} \n",
                    bits,
                    Common::FormatBytes(buf.Size()),
+                   Common::FormatMillisecons(chrono.use_time()),
+                   Common::FormatMillisecons(chrono2.use_time()));
+
+        EXPECT_TRUE(ok);
+        EXPECT_NE(buf, signature);
+        str += str;
+    }
+}
+
+TEST(Cryptography, ECC_Sign)
+{
+    std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
+
+    for (int i = 0; i < 10; ++i)
+    {
+        auto [privateKey, publicKey] = Cryptography::ECC::GenerateKey();
+
+        StringBuffer buf(str.data(), str.size());
+        StringBuffer hash = Cryptography::Hash::SHA(buf);
+
+        Chrono chrono;
+        StringBuffer signature = Cryptography::ECC::Sign(privateKey, hash);
+        chrono.stop();
+
+        Chrono chrono2;
+        bool ok = Cryptography::ECC::Verify(publicKey, hash, signature);
+        chrono2.stop();
+
+        /*
+         * Laptop x64-windows Release
+         *
+         *
+         * Desktop arm64-osx Release
+         * hash=32B, sign=0.02ms, verify=0.02ms
+         */
+        fmt::print("hash={}, sign={}, verify={} \n",
+                   Common::FormatBytes(hash.Size()),
                    Common::FormatMillisecons(chrono.use_time()),
                    Common::FormatMillisecons(chrono2.use_time()));
 

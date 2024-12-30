@@ -6,6 +6,7 @@
 **
 ****************************************************************************/
 #include "Cryptography.h"
+#include <openssl/sha.h>
 #include <openssl/aes.h>
 #include <openssl/rand.h>
 #include <openssl/evp.h>
@@ -21,6 +22,26 @@
 #endif
 #pragma warning(disable : 4566)
 #endif
+
+StringBuffer Cryptography::Hash::SHA(const StringBuffer &message, size_t bits)
+{
+    static_assert(SHA256_DIGEST_LENGTH == 256 / 8);
+    StringBuffer hash(bits / 8);
+    SHA256(message.Data(), message.Size(), hash.Data());
+    return hash;
+}
+
+std::string Cryptography::Hash::ToString(const StringBuffer &message_hash)
+{
+    std::stringstream ss;
+    ss << std::hex << std::setfill('0'); // 设置十六进制格式和填充字符
+    for (size_t i = 0; i < message_hash.Size(); ++i)
+    {
+        unsigned char byte = message_hash.At(i);
+        ss << std::setw(2) << static_cast<int>(byte); // 每个字节格式化为两位十六进制
+    }
+    return ss.str();
+}
 
 StringBuffer Cryptography::AES::GenerateKey(size_t keyLength)
 {
@@ -207,7 +228,7 @@ std::pair<StringBuffer, StringBuffer> Cryptography::RSA::GenerateKey(size_t bits
 
     StringBuffer privateKey = evp_pkey_to_pem(privateKey_.get(), true);
     StringBuffer publicKey = evp_pkey_to_pem(publicKey_.get(), false);
-    return std::make_pair(privateKey, publicKey);
+    return {privateKey, publicKey};
 }
 
 StringBuffer Cryptography::RSA::Encrypt(const StringBuffer &pem_public_key, const StringBuffer &plainText, int pad_mode)
@@ -321,7 +342,7 @@ StringBuffer Cryptography::RSA::Decrypt(const StringBuffer &pem_private_key, con
     return decryptedText;
 }
 
-StringBuffer Cryptography::RSA::Sign(const StringBuffer &pem_private_key, const StringBuffer &text)
+StringBuffer Cryptography::RSA::Sign(const StringBuffer &pem_private_key, const StringBuffer &message)
 {
     std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)> privateKey_ = pem_to_evp_pkey(pem_private_key, true);
 
@@ -335,7 +356,7 @@ StringBuffer Cryptography::RSA::Sign(const StringBuffer &pem_private_key, const 
         throw std::runtime_error("EVP_DigestSignInit failed");
     }
 
-    if (EVP_DigestSignUpdate(md_ctx, text.Data(), text.Size()) <= 0)
+    if (EVP_DigestSignUpdate(md_ctx, message.Data(), message.Size()) <= 0)
     {
         EVP_MD_CTX_free(md_ctx);
         throw std::runtime_error("EVP_DigestSignUpdate failed");
@@ -359,7 +380,7 @@ StringBuffer Cryptography::RSA::Sign(const StringBuffer &pem_private_key, const 
     return signature;
 }
 
-bool Cryptography::RSA::Verify(const StringBuffer &pem_public_key, const StringBuffer &text, const StringBuffer &signature)
+bool Cryptography::RSA::Verify(const StringBuffer &pem_public_key, const StringBuffer &message, const StringBuffer &signature)
 {
     std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)> publicKey_ = pem_to_evp_pkey(pem_public_key, false);
 
@@ -373,7 +394,7 @@ bool Cryptography::RSA::Verify(const StringBuffer &pem_public_key, const StringB
         throw std::runtime_error("EVP_DigestVerifyInit failed");
     }
 
-    if (EVP_DigestVerifyUpdate(md_ctx, text.Data(), text.Size()) <= 0)
+    if (EVP_DigestVerifyUpdate(md_ctx, message.Data(), message.Size()) <= 0)
     {
         EVP_MD_CTX_free(md_ctx);
         throw std::runtime_error("EVP_DigestVerifyUpdate failed");

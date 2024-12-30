@@ -7,6 +7,7 @@
 ****************************************************************************/
 #pragma once
 #include "StringBuffer.h"
+#include <sstream>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -19,6 +20,16 @@
 class Cryptography
 {
 public:
+    class Hash
+    {
+    public:
+        // 哈希
+        static StringBuffer SHA(const StringBuffer &message, size_t bits = 256);
+
+        // 转十六进制显示
+        static std::string ToString(const StringBuffer &message_hash);
+    };
+
     class AES
     {
     public:
@@ -44,7 +55,18 @@ public:
         static StringBuffer Decrypt(const StringBuffer &pem_private_key, const StringBuffer &cipherText, int pad_mode = 4);
 
         // 签名/验签
-        static StringBuffer Sign(const StringBuffer &pem_private_key, const StringBuffer &text);
-        static bool Verify(const StringBuffer &pem_public_key, const StringBuffer &text, const StringBuffer &signature);
+        static StringBuffer Sign(const StringBuffer &pem_private_key, const StringBuffer &message);
+        static bool Verify(const StringBuffer &pem_public_key, const StringBuffer &message, const StringBuffer &signature);
+    };
+
+    class ECC
+    {
+    public:
+        // 密钥生成 (privateKey, publicKey) 长度固定
+        static std::pair<StringBuffer, StringBuffer> GenerateKey();
+
+        // 签名/验签
+        static StringBuffer Sign(const StringBuffer &private_key, const StringBuffer &message_hash);
+        static bool Verify(const StringBuffer &public_key, const StringBuffer &message_hash, const StringBuffer &signature);
     };
 };

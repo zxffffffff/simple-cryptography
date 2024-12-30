@@ -11,9 +11,12 @@
 #include "common/common.h"
 #include "common/chrono.h"
 #include <string>
+#include <cstring>
 #include <vector>
 #include <memory>
 #include <stdexcept>
+#include <random>
+#include <cassert>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -52,7 +55,7 @@ public:
 
     virtual ~StringBuffer()
     {
-        memset(vec_buf.data(), 0, vec_buf.size());
+        RandomFill();
     }
 
     const uint8_t *Data() const
@@ -121,6 +124,23 @@ public:
         size_t size = Size();
         Resize(size + other.Size());
         memmove(Data() + size, other.Data(), other.Size());
+    }
+
+    void RandomFill()
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 255);
+        for (auto &byte : vec_buf)
+        {
+            byte = static_cast<uint8_t>(dis(gen));
+        }
+    }
+
+    uint8_t At(size_t i) const
+    {
+        assert(0 <= i && i < Size());
+        return vec_buf[i];
     }
 
     std::strong_ordering operator<=>(const StringBuffer &other) const

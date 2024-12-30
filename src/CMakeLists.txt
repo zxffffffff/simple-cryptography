@@ -66,7 +66,8 @@ file(GLOB_RECURSE include_headers
 )
 
 add_library(${PROJECT_NAME} STATIC
-    Cryptography.cpp
+    Cryptography-openssl.cpp
+    Cryptography-secp256k1.cpp
     ${include_headers}
 )
 
