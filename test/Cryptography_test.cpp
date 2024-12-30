@@ -19,16 +19,17 @@
 
 using namespace std::literals::chrono_literals;
 
-TEST(Cryptography, test)
+TEST(Cryptography, AES)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
-    for (int i = 0; i < 25; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         constexpr size_t keyLength = 256;
         constexpr size_t ivLength = 16;
         StringBuffer key = Cryptography::AES::GenerateKey(keyLength);
         StringBuffer iv = Cryptography::AES::GenerateIV(ivLength);
+
         StringBuffer buf(str.data(), str.size());
 
         Chrono chrono;
@@ -58,6 +59,53 @@ TEST(Cryptography, test)
                    Common::FormatMillisecons(chrono2.use_time()));
 
         EXPECT_EQ(buf, buf2);
+        EXPECT_NE(buf, encryptedData);
+        str += str;
+    }
+}
+
+TEST(Cryptography, RSA)
+{
+    std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
+
+    for (int i = 0; i < 15; ++i)
+    {
+        constexpr size_t bits = 2048;
+        constexpr int pad_mode = 4;
+        std::pair<StringBuffer, StringBuffer> keyPair = Cryptography::RSA::GenerateKey(bits);
+        StringBuffer &privateKey = keyPair.first;
+        StringBuffer &publicKey = keyPair.second;
+
+        StringBuffer buf(str.data(), str.size());
+
+        Chrono chrono;
+        StringBuffer encryptedData = Cryptography::RSA::Encrypt(publicKey, buf, pad_mode);
+        chrono.stop();
+
+        Chrono chrono2;
+        StringBuffer buf2 = Cryptography::RSA::Decrypt(privateKey, encryptedData, pad_mode);
+        chrono2.stop();
+
+        /*
+         * Laptop x64-windows Release
+         *
+         *
+         *
+         *
+         * Desktop arm64-osx Release
+         * bits=2048, pad_mode=4, buf=1.00KB, encrypt=0.12ms, decrypt=2.70ms
+         * bits=2048, pad_mode=4, buf=64.00KB, encrypt=4.65ms, decrypt=155.96ms
+         * bits=2048, pad_mode=4, buf=1.00MB, encrypt=73.32ms, decrypt=2.44s
+         */
+        fmt::print("bits={}, pad_mode={}, buf={}, encrypt={}, decrypt={} \n",
+                   bits,
+                   pad_mode,
+                   Common::FormatBytes(buf.Size()),
+                   Common::FormatMillisecons(chrono.use_time()),
+                   Common::FormatMillisecons(chrono2.use_time()));
+
+        EXPECT_EQ(buf, buf2);
+        EXPECT_NE(buf, encryptedData);
         str += str;
     }
 }

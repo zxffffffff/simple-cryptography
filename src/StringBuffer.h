@@ -80,17 +80,32 @@ public:
         return vec_buf.empty();
     }
 
+    void Reserve(size_t len)
+    {
+        if (len > vec_buf.capacity())
+        {
+            size_t size = Size();
+            Resize(len);
+            Resize(size);
+        }
+    }
+
     void Resize(size_t len, uint8_t val = 0)
     {
-        if (len > vec_buf.size())
+        if (len > vec_buf.capacity())
         {
             std::vector<uint8_t> temp(len, val);
             memmove(temp.data(), vec_buf.data(), vec_buf.size());
             memset(vec_buf.data(), val, vec_buf.size());
             vec_buf.swap(temp);
         }
+        else if (len >= vec_buf.size())
+        {
+            vec_buf.resize(len, val);
+        }
         else
         {
+            memset(vec_buf.data() + len, val, vec_buf.size() - len);
             vec_buf.resize(len, val);
         }
     }
@@ -99,6 +114,13 @@ public:
     {
         memset(vec_buf.data(), val, vec_buf.size());
         vec_buf.resize(len, val);
+    }
+
+    void Append(const StringBuffer &other)
+    {
+        size_t size = Size();
+        Resize(size + other.Size());
+        memmove(Data() + size, other.Data(), other.Size());
     }
 
     std::strong_ordering operator<=>(const StringBuffer &other) const

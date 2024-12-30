@@ -28,10 +28,19 @@ public:
         // 初始化向量生成 (AES_BLOCK_SIZE 16)
         static StringBuffer GenerateIV(size_t ivLength = 16);
 
-        // AES 加密
+        // 加密/解密
         static StringBuffer Encrypt(const StringBuffer &key, const StringBuffer &iv, const StringBuffer &plaintext);
-
-        // AES 解密
         static StringBuffer Decrypt(const StringBuffer &key, const StringBuffer &iv, const StringBuffer &encryptedData);
+    };
+
+    class RSA
+    {
+    public:
+        // 密钥生成 (privateKey, publicKey)
+        static std::pair<StringBuffer, StringBuffer> GenerateKey(size_t bits = 2048);
+
+        // 加密/解密 (RSA_PKCS1_OAEP_PADDING 4)
+        static StringBuffer Encrypt(const StringBuffer &pem_public_key, const StringBuffer &plainText, int pad_mode = 4);
+        static StringBuffer Decrypt(const StringBuffer &pem_private_key, const StringBuffer &cipherText, int pad_mode = 4);
     };
 };
