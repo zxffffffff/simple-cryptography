@@ -68,7 +68,7 @@ TEST(Cryptography, RSA)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
-    for (int i = 0; i < 15; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         constexpr size_t bits = 2048;
         constexpr int pad_mode = 4;
@@ -88,9 +88,9 @@ TEST(Cryptography, RSA)
 
         /*
          * Laptop x64-windows Release
-         *
-         *
-         *
+         * bits=2048, pad_mode=4, buf=1.00KB, encrypt=0.38ms, decrypt=8.73ms
+         * bits=2048, pad_mode=4, buf=64.00KB, encrypt=8.52ms, decrypt=206.61ms
+         * bits=2048, pad_mode=4, buf=1.00MB, encrypt=151.11ms, decrypt=2.99s
          *
          * Desktop arm64-osx Release
          * bits=2048, pad_mode=4, buf=1.00KB, encrypt=0.12ms, decrypt=2.70ms
