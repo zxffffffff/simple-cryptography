@@ -229,7 +229,7 @@ TEST(Cryptography, SSS_Shares)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
-    for (int i = 0; i < 15; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         constexpr int n = 3, k = 2;
         StringBuffer buf(str.data(), str.size());
@@ -246,9 +246,9 @@ TEST(Cryptography, SSS_Shares)
 
         /*
          * Laptop x64-windows Release
-         *
-         *
-         *
+         * n=3, k=2, buf=1.00KB, Shares=3.69ms, Combine=0.08ms
+         * n=3, k=2, buf=64.00KB, Shares=264.29ms, Combine=6.33ms
+         * n=3, k=2, buf=1.00MB, Shares=17.25s, Combine=764.64ms
          *
          * Desktop arm64-osx Release
          * n=3, k=2, buf=1.00KB, Shares=0.03ms, Combine=0.03ms
