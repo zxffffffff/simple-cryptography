@@ -36,16 +36,16 @@ TEST(Cryptography, Hash_SHA)
 
         /*
          * Laptop x64-windows Release
-         * bits=256, buf=1.00KB, sha=0.01ms, hash=f369...
-         * bits=256, buf=1.00MB, sha=8.95ms, hash=58e6...
-         * bits=256, buf=1.00GB, sha=2.31s, hash=6bda...
+         * bits=256, buf=1.00KB, SHA=0.01ms, hash=f369...
+         * bits=256, buf=1.00MB, SHA=8.95ms, hash=58e6...
+         * bits=256, buf=1.00GB, SHA=2.31s, hash=6bda...
          *
          * Desktop arm64-osx Release
-         * bits=256, buf=1.00KB, sha=0.00ms, hash=f369...
-         * bits=256, buf=1.00MB, sha=0.43ms, hash=58e6...
-         * bits=256, buf=1.00GB, sha=407.88ms, hash=6bda...
+         * bits=256, buf=1.00KB, SHA=0.00ms, hash=f369...
+         * bits=256, buf=1.00MB, SHA=0.43ms, hash=58e6...
+         * bits=256, buf=1.00GB, SHA=407.88ms, hash=6bda...
          */
-        fmt::print("bits={}, buf={}, sha={}, hash={} \n",
+        fmt::print("bits={}, buf={}, SHA={}, hash={} \n",
                    bits,
                    Common::FormatBytes(buf.Size()),
                    Common::FormatMillisecons(chrono.use_time() / 2),
@@ -80,16 +80,16 @@ TEST(Cryptography, AES_Encrypt)
 
         /*
          * Laptop x64-windows Release
-         * keyLength=256, buf=1.00KB, encrypt=0.01ms, decrypt=0.01ms
-         * keyLength=256, buf=1.00MB, encrypt=2.39ms, decrypt=1.91ms
-         * keyLength=256, buf=1.00GB, encrypt=1.27s, decrypt=1.07s
+         * keyLength=256, buf=1.00KB, Encrypt=0.01ms, Decrypt=0.01ms
+         * keyLength=256, buf=1.00MB, Encrypt=2.39ms, Decrypt=1.91ms
+         * keyLength=256, buf=1.00GB, Encrypt=1.27s, Decrypt=1.07s
          *
          * Desktop arm64-osx Release
-         * keyLength=256, buf=1.00KB, encrypt=0.00ms, decrypt=0.00ms
-         * keyLength=256, buf=1.00MB, encrypt=0.88ms, decrypt=0.20ms
-         * keyLength=256, buf=1.00GB, encrypt=915.64ms, decrypt=321.96ms
+         * keyLength=256, buf=1.00KB, Encrypt=0.00ms, Decrypt=0.00ms
+         * keyLength=256, buf=1.00MB, Encrypt=0.88ms, Decrypt=0.20ms
+         * keyLength=256, buf=1.00GB, Encrypt=915.64ms, Decrypt=321.96ms
          */
-        fmt::print("key={}, iv={}, buf={}, encrypt={}, decrypt={} \n",
+        fmt::print("key={}, iv={}, buf={}, Encrypt={}, Decrypt={} \n",
                    keyLength,
                    ivLength,
                    Common::FormatBytes(buf.Size()),
@@ -124,16 +124,16 @@ TEST(Cryptography, RSA_Encrypt)
 
         /*
          * Laptop x64-windows Release
-         * bits=2048, pad_mode=4, buf=1.00KB, encrypt=0.38ms, decrypt=8.73ms
-         * bits=2048, pad_mode=4, buf=64.00KB, encrypt=8.52ms, decrypt=206.61ms
-         * bits=2048, pad_mode=4, buf=1.00MB, encrypt=151.11ms, decrypt=2.99s
+         * bits=2048, pad_mode=4, buf=1.00KB, Encrypt=0.38ms, Decrypt=8.73ms
+         * bits=2048, pad_mode=4, buf=64.00KB, Encrypt=8.52ms, Decrypt=206.61ms
+         * bits=2048, pad_mode=4, buf=1.00MB, Encrypt=151.11ms, Decrypt=2.99s
          *
          * Desktop arm64-osx Release
-         * bits=2048, pad_mode=4, buf=1.00KB, encrypt=0.12ms, decrypt=2.70ms
-         * bits=2048, pad_mode=4, buf=64.00KB, encrypt=4.65ms, decrypt=155.96ms
-         * bits=2048, pad_mode=4, buf=1.00MB, encrypt=73.32ms, decrypt=2.44s
+         * bits=2048, pad_mode=4, buf=1.00KB, Encrypt=0.12ms, Decrypt=2.70ms
+         * bits=2048, pad_mode=4, buf=64.00KB, Encrypt=4.65ms, Decrypt=155.96ms
+         * bits=2048, pad_mode=4, buf=1.00MB, Encrypt=73.32ms, Decrypt=2.44s
          */
-        fmt::print("bits={}, pad_mode={}, buf={}, encrypt={}, decrypt={} \n",
+        fmt::print("bits={}, pad_mode={}, buf={}, Encrypt={}, Decrypt={} \n",
                    bits,
                    pad_mode,
                    Common::FormatBytes(buf.Size()),
@@ -167,16 +167,16 @@ TEST(Cryptography, RSA_Sign)
 
         /*
          * Laptop x64-windows Release
-         * bits=2048, buf=1.00KB, sign=1.50ms, verify=0.12ms
-         * bits=2048, buf=1.00MB, sign=4.14ms, verify=2.74ms
-         * bits=2048, buf=1.00GB, sign=2.15s, verify=2.16s
+         * bits=2048, buf=1.00KB, Sign=1.50ms, Verify=0.12ms
+         * bits=2048, buf=1.00MB, Sign=4.14ms, Verify=2.74ms
+         * bits=2048, buf=1.00GB, Sign=2.15s, Verify=2.16s
          *
          * Desktop arm64-osx Release
-         * bits=2048, buf=1.00KB, sign=0.84ms, verify=0.05ms
-         * bits=2048, buf=1.00MB, sign=1.17ms, verify=0.44ms
-         * bits=2048, buf=1.00GB, sign=407.62ms, verify=409.73ms
+         * bits=2048, buf=1.00KB, Sign=0.84ms, Verify=0.05ms
+         * bits=2048, buf=1.00MB, Sign=1.17ms, Verify=0.44ms
+         * bits=2048, buf=1.00GB, Sign=407.62ms, Verify=409.73ms
          */
-        fmt::print("bits={}, buf={}, sign={}, verify={} \n",
+        fmt::print("bits={}, buf={}, Sign={}, Verify={} \n",
                    bits,
                    Common::FormatBytes(buf.Size()),
                    Common::FormatMillisecons(chrono.use_time()),
@@ -209,18 +209,63 @@ TEST(Cryptography, ECC_Sign)
 
         /*
          * Laptop x64-windows Release
-         * hash=32B, sign=0.05ms, verify=0.13ms
+         * hash=32B, Sign=0.05ms, Verify=0.13ms
          *
          * Desktop arm64-osx Release
-         * hash=32B, sign=0.02ms, verify=0.02ms
+         * hash=32B, Sign=0.02ms, Verify=0.02ms
          */
-        fmt::print("hash={}, sign={}, verify={} \n",
+        fmt::print("hash={}, Sign={}, Verify={} \n",
                    Common::FormatBytes(hash.Size()),
                    Common::FormatMillisecons(chrono.use_time()),
                    Common::FormatMillisecons(chrono2.use_time()));
 
         EXPECT_TRUE(ok);
         EXPECT_NE(buf, signature);
+        str += str;
+    }
+}
+
+TEST(Cryptography, SSS_Shares)
+{
+    std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
+
+    for (int i = 0; i < 15; ++i)
+    {
+        constexpr int n = 3, k = 2;
+        StringBuffer buf(str.data(), str.size());
+
+        Chrono chrono;
+        std::vector<StringBuffer> shares = Cryptography::SSS::Shares(buf, n, k);
+        chrono.stop();
+
+        std::vector<StringBuffer> part_0_1 = {shares[0], shares[1]};
+
+        Chrono chrono2;
+        StringBuffer buf2 = Cryptography::SSS::Combine(part_0_1);
+        chrono2.stop();
+
+        /*
+         * Laptop x64-windows Release
+         *
+         *
+         *
+         *
+         * Desktop arm64-osx Release
+         * n=3, k=2, buf=1.00KB, Shares=0.03ms, Combine=0.03ms
+         * n=3, k=2, buf=64.00KB, Shares=19.14ms, Combine=2.93ms
+         * n=3, k=2, buf=1.00MB, Shares=2.24s, Combine=382.53ms
+         */
+        fmt::print("n={}, k={}, buf={}, Shares={}, Combine={} \n",
+                   n,
+                   k,
+                   Common::FormatBytes(buf.Size()),
+                   Common::FormatMillisecons(chrono.use_time()),
+                   Common::FormatMillisecons(chrono2.use_time()));
+
+        EXPECT_EQ(buf, buf2);
+        EXPECT_NE(buf, shares[0]);
+        EXPECT_NE(buf, shares[1]);
+        EXPECT_NE(buf, shares[2]);
         str += str;
     }
 }

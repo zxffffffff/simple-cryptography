@@ -16,6 +16,7 @@
 #pragma warning(disable : 4566)
 #endif
 
+// AES Encrypt
 class SecurityBuffer
 {
 private:

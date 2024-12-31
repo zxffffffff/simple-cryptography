@@ -17,6 +17,7 @@
 #include <stdexcept>
 #include <random>
 #include <cassert>
+#include <sstream>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -26,6 +27,7 @@
 #pragma warning(disable : 4566)
 #endif
 
+// std::vector<uint8_t>
 class StringBuffer
 {
 private:
@@ -38,34 +40,35 @@ public:
 
     StringBuffer(const uint8_t *buf, size_t len)
     {
-        Resize(len);
+        vec_buf.resize(len);
         memmove(vec_buf.data(), buf, len);
     }
 
     StringBuffer(const char *buf, size_t len)
     {
-        Resize(len);
+        vec_buf.resize(len);
         memmove(vec_buf.data(), buf, len);
     }
 
-    StringBuffer(size_t len)
+    StringBuffer(size_t len, uint8_t val = 0)
     {
-        Resize(len);
+        vec_buf.resize(len, val);
     }
 
     virtual ~StringBuffer()
     {
-        RandomFill();
+        if (!vec_buf.empty())
+            memset(vec_buf.data(), 0, vec_buf.size());
     }
 
     const uint8_t *Data() const
     {
-        return reinterpret_cast<const uint8_t *>(vec_buf.data());
+        return vec_buf.data();
     }
 
     uint8_t *Data()
     {
-        return const_cast<uint8_t *>(reinterpret_cast<const uint8_t *>(vec_buf.data()));
+        return vec_buf.data();
     }
 
     const char *Str() const
@@ -117,6 +120,13 @@ public:
     {
         memset(vec_buf.data(), val, vec_buf.size());
         vec_buf.resize(len, val);
+    }
+
+    void Append(const uint8_t *buf, size_t len)
+    {
+        size_t size = Size();
+        Resize(size + len);
+        memmove(Data() + size, buf, len);
     }
 
     void Append(const StringBuffer &other)
