@@ -6,6 +6,7 @@
     "fmt",
     "gtest",
     "boost-algorithm",
+    "openssl",
     "cryptopp",
     "zlib",
     "snappy"

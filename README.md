@@ -4,7 +4,7 @@
 ![workflow](https://github.com/zxffffffff/simple-cryptography/actions/workflows/build-macos.yml/badge.svg?event=push)
 ![workflow](https://github.com/zxffffffff/simple-cryptography/actions/workflows/build-ubuntu.yml/badge.svg?event=push)
 
-一个最少依赖的密码学库，把 crypto++ zlib 等常用加解密和压缩算法封装成独立的函数
+一个最少依赖的密码学库，把 openssl crypto++ zlib 等常用加解密和压缩算法封装成独立的函数
 
 ## 非对称加密算法
 
@@ -42,7 +42,7 @@
 
 此类坐标的曲线没有任何连续线的概念，它的图实际上看起来像随机散点
 
-![image](https://github.com/zxffffffff/simple-cryptography/blob/master/docs/Secp256k1.png)
+![image](https://github.com/zxffffffff/simple-cryptography/blob/main/docs/Secp256k1.png)
 
 ## 对称加密算法
 
@@ -56,7 +56,7 @@
 
 `AES-256` 被认为具有量子抗性，`AES-192` 针对量子攻击的强度为 96 位，而 `AES-128` 针对量子攻击的强度为 64 位，这使得它们都不安全。
 
-![image](https://github.com/zxffffffff/simple-cryptography/blob/master/docs/AES_(Rijndael)_Round_Function.png)
+![image](https://github.com/zxffffffff/simple-cryptography/blob/main/docs/AES_(Rijndael)_Round_Function.png)
 
 ## 秘密共享算法
 
@@ -68,4 +68,4 @@ Shamir 秘密共享 (Shamir's secret sharing)，1979 年发明由 Adi Shamir 发
 
 具体来说 k 多项式上的点唯一确定次数小于或等于的多项式 k−1。例如，2 个点足以定义直线，3 个点足以定义抛物线，4 个点足以定义三次曲线等等。
 
-![image](https://github.com/zxffffffff/simple-cryptography/blob/master/docs/3_polynomials_of_degree_2_through_2_points.svg.png)
+![image](https://github.com/zxffffffff/simple-cryptography/blob/main/docs/3_polynomials_of_degree_2_through_2_points.svg.png)

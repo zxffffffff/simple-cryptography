@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <memory>
 #include <chrono>
 #include <random>
 #include <thread>
@@ -172,5 +173,54 @@ public:
         thread_local std::string buf;
         buf = str;
         return buf.data();
+    }
+
+    /* 字节数转换 */
+    static std::string FormatBytes(size_t bytes, const std::string &space = "")
+    {
+        const char *units[] = {"B", "KB", "MB", "GB", "TB", "PB"};
+        size_t unitIndex = 0;
+        double size = static_cast<double>(bytes);
+
+        while (size >= 1024 && unitIndex < 5)
+        {
+            size /= 1024;
+            ++unitIndex;
+        }
+
+        std::ostringstream oss;
+        if (unitIndex == 0)
+        {
+            oss << static_cast<size_t>(size) << space << units[unitIndex];
+        }
+        else
+        {
+            oss << std::fixed << std::setprecision(2) << size << space << units[unitIndex];
+        }
+        return oss.str();
+    }
+
+    /* 毫秒数转换 */
+    static std::string FormatMillisecons(double ms, const std::string &space = "")
+    {
+        const char *units[] = {"ms", "s", "min"};
+        size_t unitIndex = 0;
+        double size = static_cast<double>(ms);
+
+        if (size >= 1000)
+        {
+            size /= 1000;
+            ++unitIndex;
+
+            if (size >= 60)
+            {
+                size /= 60;
+                ++unitIndex;
+            }
+        }
+
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(2) << size << space << units[unitIndex];
+        return oss.str();
     }
 };

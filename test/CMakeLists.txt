@@ -16,8 +16,8 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}
-    common_test.cpp
-    fmt_test.cpp
+    Cryptography_test.cpp
+    SecurityBuffer_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
