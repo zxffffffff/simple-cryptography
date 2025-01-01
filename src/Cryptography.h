@@ -24,13 +24,11 @@ public:
     {
     public:
         static StringBuffer SHA(const StringBuffer &message, size_t bits = 256);
-
-        // 转十六进制显示
-        static std::string ToString(const StringBuffer &message_hash);
     };
 
-    // 对称加密算法 (Symmetric-key algorithm)
-    // - 高级加密标准 (Advanced Encryption Standard)
+    /* 对称加密算法 (Symmetric-key algorithm)
+     * - 高级加密标准 (Advanced Encryption Standard)
+     */
     class AES
     {
     public:
@@ -45,12 +43,13 @@ public:
         static StringBuffer Decrypt(const StringBuffer &key, const StringBuffer &iv, const StringBuffer &encryptedData);
     };
 
-    // 非对称加密算法 (Public-key cryptography)
-    // - 公钥密码学标准 PKCS (Public-Key Cryptography Standards)
+    /* 非对称加密算法 (Public-key cryptography)
+     * - 公钥密码学标准 PKCS (Public-Key Cryptography Standards)
+     */
     class RSA
     {
     public:
-        // 密钥生成 (privateKey, publicKey)
+        // 密钥生成 (私钥+公钥)
         static std::pair<StringBuffer, StringBuffer> GenerateKey(size_t bits = 2048);
 
         // 加密/解密 (RSA_PKCS1_OAEP_PADDING = 4)
@@ -62,12 +61,13 @@ public:
         static bool Verify(const StringBuffer &pem_public_key, const StringBuffer &message, const StringBuffer &signature);
     };
 
-    // 椭圆曲线密码学 (Elliptic Curve Cryptography)
-    // - 椭圆曲线参数 secp256k1
+    /* 椭圆曲线密码学 (Elliptic Curve Cryptography)
+     * - 椭圆曲线参数 secp256k1
+     */
     class ECC
     {
     public:
-        // 密钥生成 (privateKey, publicKey) 长度固定
+        // 密钥生成 (私钥+公钥) 长度固定
         static std::pair<StringBuffer, StringBuffer> GenerateKey();
 
         // 签名/验签 (SHA256)
@@ -75,13 +75,42 @@ public:
         static bool Verify(const StringBuffer &public_key, const StringBuffer &message_hash, const StringBuffer &signature);
     };
 
-    // 秘密共享算法 (Secret sharing)
-    // - Shamir 秘密共享 (Shamir's secret sharing)
+    /* 秘密共享算法 (Secret sharing)
+     * - Shamir 秘密共享 (Shamir's secret sharing)
+     */
     class SSS
     {
     public:
         // 2-of-3 (n=3, k=2)
         static std::vector<StringBuffer> Shares(const StringBuffer &message, int n, int k);
         static StringBuffer Combine(const std::vector<StringBuffer> &shares);
+    };
+
+    /* 密钥封装机制 (KEM, Key Encapsulation Mechanism)
+     * - Kyber 抗量子算法
+     * | 参数集     | 公钥长度 (bytes) | 私钥长度 (bytes) | 密文长度 (bytes) | 共享密钥长度 (bytes) |
+     * | ---------- | ---------------- | ---------------- | ---------------- | -------------------- |
+     * | Kyber-512  | 800              | 1632             | 768              | 32                   |
+     * | Kyber-768  | 1184             | 2400             | 1088             | 32                   |
+     * | Kyber-1024 | 1568             | 3168             | 1568             | 32                   |
+     */
+    class Kyber
+    {
+    public:
+        /* 密钥生成
+         * @return 私钥+公钥
+         */
+        static std::pair<StringBuffer, StringBuffer> GenerateKey(int bits = 1024);
+
+        /* 加密
+         * @return 密文+共享密钥
+         */
+        static std::pair<StringBuffer, StringBuffer> Encrypt(const StringBuffer &publicKey);
+
+        /* 解密
+         * @param cipherText 密文
+         * @return 共享密钥
+         */
+        static StringBuffer Decrypt(const StringBuffer &secretKey, const StringBuffer &cipherText);
     };
 };

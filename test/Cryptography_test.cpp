@@ -49,7 +49,7 @@ TEST(Cryptography, Hash_SHA)
                    bits,
                    Common::FormatBytes(buf.Size()),
                    Common::FormatMillisecons(chrono.use_time() / 2),
-                   Cryptography::Hash::ToString(hash));
+                   Common::ToHexString(hash.Data(), hash.Size()));
 
         EXPECT_EQ(hash, hash2);
         EXPECT_NE(buf, hash);
@@ -267,5 +267,35 @@ TEST(Cryptography, SSS_Shares)
         EXPECT_NE(buf, shares[1]);
         EXPECT_NE(buf, shares[2]);
         str += str;
+    }
+}
+
+TEST(Cryptography, Kyber)
+{
+    constexpr int bits = 1024;
+
+    for (int i = 0; i < 10; ++i)
+    {
+        Chrono chrono;
+        auto [privateKey, publicKey] = Cryptography::Kyber::GenerateKey(bits);
+        chrono.stop();
+
+        Chrono chrono2;
+        auto [ciphertext, sharedSecret] = Cryptography::Kyber::Encrypt(publicKey);
+        chrono2.stop();
+
+        Chrono chrono3;
+        StringBuffer sharedSecret2 = Cryptography::Kyber::Decrypt(privateKey, ciphertext);
+        chrono3.stop();
+
+        fmt::print("bits={}, GenerateKey={}, Encrypt={}, Decrypt={}, sharedSecret={} \n",
+                   bits,
+                   Common::FormatMillisecons(chrono.use_time()),
+                   Common::FormatMillisecons(chrono2.use_time()),
+                   Common::FormatMillisecons(chrono3.use_time()),
+                   Common::ToHexString(sharedSecret.Data(), sharedSecret.Size()));
+
+        EXPECT_EQ(sharedSecret, sharedSecret2);
+        EXPECT_NE(sharedSecret, ciphertext);
     }
 }
