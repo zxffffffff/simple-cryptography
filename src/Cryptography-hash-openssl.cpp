@@ -23,15 +23,3 @@ StringBuffer Cryptography::Hash::SHA(const StringBuffer &message, size_t bits)
     SHA256(message.Data(), message.Size(), hash.Data());
     return hash;
 }
-
-std::string Cryptography::Hash::ToString(const StringBuffer &message_hash)
-{
-    std::stringstream ss;
-    ss << std::hex << std::setfill('0'); // 设置十六进制格式和填充字符
-    for (size_t i = 0; i < message_hash.Size(); ++i)
-    {
-        unsigned char byte = message_hash.At(i);
-        ss << std::setw(2) << static_cast<int>(byte); // 每个字节格式化为两位十六进制
-    }
-    return ss.str();
-}

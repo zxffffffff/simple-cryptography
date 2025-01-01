@@ -56,6 +56,17 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(sss)
 message(STATUS "[${PROJECT_NAME}] sss_SOURCE_DIR : ${sss_SOURCE_DIR}")
 
+# 引入 liboqs (依赖 doxygen)
+FetchContent_Declare(
+    oqs
+    GIT_REPOSITORY https://github.com/zxffffffff/liboqs.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(oqs)
+message(STATUS "[${PROJECT_NAME}] oqs_SOURCE_DIR : ${oqs_SOURCE_DIR}")
+set(oqs_BUILD_DIR "${oqs_SOURCE_DIR}/../oqs-build")
+set(oqs_INCLUDE_DIR "${oqs_BUILD_DIR}/include")
+
 # Public 头文件
 file(GLOB_RECURSE include_headers
     common/cpp_version.h
@@ -73,6 +84,7 @@ add_library(${PROJECT_NAME} STATIC
     Cryptography-rsa-openssl.cpp
     Cryptography-ecc-secp256k1.cpp
     Cryptography-sss.cpp
+    Cryptography-kyber-liboqs.cpp
     ${include_headers}
 )
 
@@ -85,12 +97,14 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC Snappy::snappy
     PUBLIC secp256k1
     PUBLIC sss
+    PUBLIC oqs
 )
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
     PUBLIC ${secp256k1_SOURCE_DIR}
     PUBLIC ${sss_SOURCE_DIR}
+    PUBLIC ${oqs_INCLUDE_DIR}
 )
 
 set_target_properties(${PROJECT_NAME}

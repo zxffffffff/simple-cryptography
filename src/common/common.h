@@ -223,4 +223,16 @@ public:
         oss << std::fixed << std::setprecision(2) << size << space << units[unitIndex];
         return oss.str();
     }
+
+    /* 十六进制转换 */
+    static std::string ToHexString(const unsigned char *bytes, int len)
+    {
+        std::stringstream ss;
+        ss << std::hex << std::setfill('0'); // 设置格式和填充字符
+        for (size_t i = 0; i < len; ++i)
+        {
+            ss << std::setw(2) << static_cast<int>(bytes[i]); // 每个字节格式化为两位十六进制
+        }
+        return ss.str();
+    }
 };

@@ -69,3 +69,17 @@ Shamir 秘密共享 (Shamir's secret sharing)，1979 年发明由 Adi Shamir 发
 具体来说 k 多项式上的点唯一确定次数小于或等于的多项式 k−1。例如，2 个点足以定义直线，3 个点足以定义抛物线，4 个点足以定义三次曲线等等。
 
 ![image](https://github.com/zxffffffff/simple-cryptography/blob/main/docs/3_polynomials_of_degree_2_through_2_points.svg.png)
+
+## 密钥封装机制
+
+密钥封装机制 (KEM, Key Encapsulation Mechanism)，旨在抵御未来强大的量子计算机的密码分析攻击。它用于在两个通信方之间建立共享秘密，而传输系统中的攻击者无法解密它。该非对称密码系统使用错误格学习问题的变体作为其基本陷门函数。它赢得了NIST第一个后量子密码(PQ) 标准竞赛。NIST 将其标准称为基于模块格的密钥封装机制 (ML-KEM)。
+
+### 1. `Kyber`
+
+Kyber 源自Oded Regev于 2005 年发布的抗量子算法。2017 年，该方法被提交给美国国家标准与技术研究所 (NIST)，用于其第一个量子安全密码原语标准 (NISTPQC) 的公开选择过程。它是在 NIST 第三轮标准化过程结束时被选择进行标准化的唯一关键封装机制。
+
+Kyber512（NIST安全级别 1，≈ AES 128）、Kyber768（NIST 安全级别 3，约 AES 192）、Kyber1024（NIST 安全级别 5，约 AES 256）。
+
+公钥加密方案和 KEM 之间的区别在于，Kyber 本身不是直接用来加密解密任意数据的，而是为通信双方生成一个共享的对称密钥，用于后续对称加密算法的加密通信。
+
+![image](https://github.com/zxffffffff/simple-cryptography/blob/main/docs/KEM.svg)
