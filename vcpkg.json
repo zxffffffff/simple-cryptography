@@ -8,6 +8,7 @@
     "boost-algorithm",
     "openssl",
     "cryptopp",
+    "botan",
     "zlib",
     "snappy"
   ]
