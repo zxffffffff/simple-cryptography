@@ -225,6 +225,33 @@ TEST(Cryptography, ECC_Sign)
     }
 }
 
+TEST(Cryptography, ECDH)
+{
+    for (int i = 0; i < 10; ++i)
+    {
+        auto [a_privateKey, a_publicKey] = Cryptography::ECC::GenerateKey();
+        auto [b_privateKey, b_publicKey] = Cryptography::ECC::GenerateKey();
+
+        Chrono chrono;
+        StringBuffer sharedSecret = Cryptography::ECC::ECDH(a_privateKey, b_publicKey);
+        chrono.stop();
+
+        Chrono chrono2;
+        StringBuffer sharedSecret2 = Cryptography::ECC::ECDH(b_privateKey, a_publicKey);
+        chrono2.stop();
+
+        fmt::print("ECDH={}, sharedSecret={} \n",
+                   Common::FormatMillisecons(chrono.use_time()),
+                   Common::ToHexString(sharedSecret.Data(), sharedSecret.Size()));
+
+        EXPECT_EQ(sharedSecret, sharedSecret2);
+        EXPECT_NE(sharedSecret, a_privateKey);
+        EXPECT_NE(sharedSecret, a_publicKey);
+        EXPECT_NE(sharedSecret, b_privateKey);
+        EXPECT_NE(sharedSecret, b_publicKey);
+    }
+}
+
 TEST(Cryptography, SSS_Shares)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";

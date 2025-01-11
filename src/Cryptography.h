@@ -73,6 +73,13 @@ public:
         // 签名/验签 (SHA256)
         static StringBuffer Sign(const StringBuffer &private_key, const StringBuffer &message_hash);
         static bool Verify(const StringBuffer &public_key, const StringBuffer &message_hash, const StringBuffer &signature);
+
+        /* Diffie-Hellman 密钥交换（DH）
+         * @param a_private_key A的私钥
+         * @param b_public_key B的公钥
+         * @return AB共享密钥
+         */
+        static StringBuffer ECDH(const StringBuffer &a_private_key, const StringBuffer &b_public_key);
     };
 
     /* 秘密共享算法 (Secret sharing)
