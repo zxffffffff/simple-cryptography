@@ -31,135 +31,38 @@
 class StringBuffer
 {
 private:
-    std::vector<uint8_t> vec_buf;
+    std::unique_ptr<class StringBufferPriv> priv;
 
 public:
-    StringBuffer()
-    {
-    }
+    StringBuffer() noexcept;
+    StringBuffer(const uint8_t *buf, size_t len) noexcept;
+    StringBuffer(const char *buf, size_t len) noexcept;
+    StringBuffer(size_t len, uint8_t val = 0) noexcept;
 
-    StringBuffer(const uint8_t *buf, size_t len)
-    {
-        vec_buf.resize(len);
-        memmove(vec_buf.data(), buf, len);
-    }
+    // 拷贝构造和拷贝赋值
+    StringBuffer(const StringBuffer &other) noexcept;
+    StringBuffer &operator=(const StringBuffer &other) noexcept;
 
-    StringBuffer(const char *buf, size_t len)
-    {
-        vec_buf.resize(len);
-        memmove(vec_buf.data(), buf, len);
-    }
+    // 移动构造和移动赋值
+    StringBuffer(StringBuffer &&other) noexcept;
+    StringBuffer &operator=(StringBuffer &&other) noexcept;
 
-    StringBuffer(size_t len, uint8_t val = 0)
-    {
-        vec_buf.resize(len, val);
-    }
+    virtual ~StringBuffer() noexcept;
 
-    virtual ~StringBuffer()
-    {
-        if (!vec_buf.empty())
-            memset(vec_buf.data(), 0, vec_buf.size());
-    }
+    const uint8_t *Data() const noexcept;
+    uint8_t *Data() noexcept;
+    const char *Str() const noexcept;
 
-    const uint8_t *Data() const
-    {
-        return vec_buf.data();
-    }
+    size_t Size() const noexcept;
+    bool Empty() const noexcept;
+    void Reserve(size_t len) noexcept;
+    void Resize(size_t len, uint8_t val = 0) noexcept;
+    void Reset(size_t len, uint8_t val = 0) noexcept;
+    void Append(const uint8_t *buf, size_t len) noexcept;
+    void Append(const StringBuffer &other) noexcept;
+    void RandomFill() noexcept;
+    uint8_t At(size_t i) const noexcept;
 
-    uint8_t *Data()
-    {
-        return vec_buf.data();
-    }
-
-    const char *Str() const
-    {
-        return reinterpret_cast<const char *>(vec_buf.data());
-    }
-
-    size_t Size() const
-    {
-        return vec_buf.size();
-    }
-
-    bool Empty() const
-    {
-        return vec_buf.empty();
-    }
-
-    void Reserve(size_t len)
-    {
-        if (len > vec_buf.capacity())
-        {
-            size_t size = Size();
-            Resize(len);
-            Resize(size);
-        }
-    }
-
-    void Resize(size_t len, uint8_t val = 0)
-    {
-        if (len > vec_buf.capacity())
-        {
-            std::vector<uint8_t> temp(len, val);
-            memmove(temp.data(), vec_buf.data(), vec_buf.size());
-            memset(vec_buf.data(), val, vec_buf.size());
-            vec_buf.swap(temp);
-        }
-        else if (len >= vec_buf.size())
-        {
-            vec_buf.resize(len, val);
-        }
-        else
-        {
-            memset(vec_buf.data() + len, val, vec_buf.size() - len);
-            vec_buf.resize(len, val);
-        }
-    }
-
-    void Reset(size_t len, uint8_t val = 0)
-    {
-        memset(vec_buf.data(), val, vec_buf.size());
-        vec_buf.resize(len, val);
-    }
-
-    void Append(const uint8_t *buf, size_t len)
-    {
-        size_t size = Size();
-        Resize(size + len);
-        memmove(Data() + size, buf, len);
-    }
-
-    void Append(const StringBuffer &other)
-    {
-        size_t size = Size();
-        Resize(size + other.Size());
-        memmove(Data() + size, other.Data(), other.Size());
-    }
-
-    void RandomFill()
-    {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(0, 255);
-        for (auto &byte : vec_buf)
-        {
-            byte = static_cast<uint8_t>(dis(gen));
-        }
-    }
-
-    uint8_t At(size_t i) const
-    {
-        assert(0 <= i && i < Size());
-        return vec_buf[i];
-    }
-
-    std::strong_ordering operator<=>(const StringBuffer &other) const
-    {
-        return vec_buf <=> other.vec_buf;
-    }
-
-    bool operator==(const StringBuffer &other) const
-    {
-        return vec_buf == other.vec_buf;
-    }
+    std::strong_ordering operator<=>(const StringBuffer &other) const noexcept;
+    bool operator==(const StringBuffer &other) const noexcept;
 };

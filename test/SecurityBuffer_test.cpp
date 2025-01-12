@@ -7,7 +7,7 @@
 ****************************************************************************/
 #include "gtest/gtest.h"
 #include "fmt/format.h"
-#include "SecurityBuffer.h"
+#include "SecureBuffer.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -19,7 +19,7 @@
 
 using namespace std::literals::chrono_literals;
 
-TEST(SecurityBuffer, test)
+TEST(SecureBuffer, test)
 {
     std::string str = "XDFGHJafhdldknf@p9US*jknbgKSQ!~!@#$%^&*()_+}\"?><MNBVCXJHGV>NHBV-";
 
@@ -28,7 +28,7 @@ TEST(SecurityBuffer, test)
         StringBuffer buf(str.data(), str.size());
 
         Chrono chrono;
-        SecurityBuffer security(buf);
+        SecureBuffer security(buf);
         chrono.stop();
 
         Chrono chrono2;

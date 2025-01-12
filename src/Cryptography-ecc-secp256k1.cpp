@@ -7,6 +7,7 @@
 ****************************************************************************/
 #include "Cryptography.h"
 #include <secp256k1.h>
+#include <secp256k1_ecdh.h>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -108,4 +109,30 @@ bool Cryptography::ECC::Verify(const StringBuffer &public_key, const StringBuffe
     secp256k1_context_destroy(ctx);
     int ret = secp256k1_ecdsa_verify(ctx, &sig, message_hash.Data(), &pubkey);
     return ret == 1;
+}
+
+StringBuffer Cryptography::ECC::ECDH(const StringBuffer &a_private_key, const StringBuffer &b_public_key)
+{
+    secp256k1_context *ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+    if (!ctx)
+    {
+        throw std::runtime_error("Failed to create secp256k1 context");
+    }
+
+    secp256k1_pubkey pubkey;
+    if (secp256k1_ec_pubkey_parse(ctx, &pubkey, b_public_key.Data(), b_public_key.Size()) != 1)
+    {
+        secp256k1_context_destroy(ctx);
+        throw std::runtime_error("secp256k1_ec_pubkey_parse failed");
+    }
+
+    StringBuffer sharedSecret(32);
+    if (!secp256k1_ecdh(ctx, sharedSecret.Data(), &pubkey, a_private_key.Data(), NULL, NULL))
+    {
+        secp256k1_context_destroy(ctx);
+        throw std::runtime_error("secp256k1_ecdh failed");
+    }
+
+    secp256k1_context_destroy(ctx);
+    return sharedSecret;
 }

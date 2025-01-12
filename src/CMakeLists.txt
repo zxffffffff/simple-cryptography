@@ -36,6 +36,9 @@ message(STATUS "[${PROJECT_NAME}] ZLIB_LIBRARIES : ${ZLIB_LIBRARIES}")
 # 引入 snappy
 find_package(Snappy CONFIG REQUIRED)
 
+# 引入 botan
+find_package(botan CONFIG REQUIRED)
+
 # 引入 secp256k1
 FetchContent_Declare(
     secp256k1
@@ -75,16 +78,18 @@ file(GLOB_RECURSE include_headers
     common/chrono.h
     StringBuffer.h
     Cryptography.h
-    SecurityBuffer.h
+    SecureBuffer.h
 )
 
 add_library(${PROJECT_NAME} STATIC
+    StringBuffer-botan.cpp
     Cryptography-hash-openssl.cpp
     Cryptography-aes-openssl.cpp
     Cryptography-rsa-openssl.cpp
     Cryptography-ecc-secp256k1.cpp
     Cryptography-sss.cpp
     Cryptography-kyber-liboqs.cpp
+    SecureBuffer.cpp
     ${include_headers}
 )
 
@@ -95,6 +100,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC cryptopp::cryptopp
     PUBLIC ZLIB::ZLIB
     PUBLIC Snappy::snappy
+    PUBLIC Botan::Botan-static
     PUBLIC secp256k1
     PUBLIC sss
     PUBLIC oqs
