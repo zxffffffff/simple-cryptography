@@ -6,7 +6,7 @@
 ## 
 #############################################################################
 
-project(simple-cryptography-lib)
+project(simple-cryptography)
 message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
