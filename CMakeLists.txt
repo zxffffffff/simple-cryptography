@@ -6,7 +6,7 @@
 ## 
 #############################################################################
 
-message("[simple-cryptography] -------- start")
+message("[simple-cryptography-project] -------- start")
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED ON)
@@ -48,7 +48,7 @@ if(NOT DEFINED VCPKG_TARGET_TRIPLET)
         message(FATAL_ERROR "Unsupported platform. Please define VCPKG_TARGET_TRIPLET manually.")
     endif()
 endif()
-message(STATUS "[simple-cryptography] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
+message(STATUS "[simple-cryptography-project] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
 if(DEFINED ENV{VCPKG_ROOT})
@@ -68,14 +68,14 @@ else()
     endif()
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 endif()
-message(STATUS "[simple-cryptography] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "[simple-cryptography-project] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
 
-project("simple-cryptography")
+project("simple-cryptography-project")
 
-message(STATUS "[simple-cryptography] CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
-message(STATUS "[simple-cryptography] CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-message(STATUS "[simple-cryptography] CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
-message(STATUS "[simple-cryptography] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[simple-cryptography-project] CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "[simple-cryptography-project] CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message(STATUS "[simple-cryptography-project] CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "[simple-cryptography-project] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # 加载 FetchContent 模块 (CMake 3.11 以上版本)
 include(FetchContent)
@@ -89,4 +89,4 @@ include(CTest) # 支持 ctest 命令
 include_directories(${PROJECT_SOURCE_DIR}/test)
 add_subdirectory(test)
 
-message("[simple-cryptography] -------- done")
+message("[simple-cryptography-project] -------- done")
