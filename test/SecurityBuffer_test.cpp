@@ -8,6 +8,8 @@
 #include "gtest/gtest.h"
 #include "fmt/format.h"
 #include "SecureBuffer.h"
+#include "common/chrono.h"
+#include "common/common.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */

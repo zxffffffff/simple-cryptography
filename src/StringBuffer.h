@@ -6,10 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include "common/cpp_version.h"
-#include "common/cpp_def.h"
-#include "common/common.h"
-#include "common/chrono.h"
 #include <string>
 #include <cstring>
 #include <vector>
