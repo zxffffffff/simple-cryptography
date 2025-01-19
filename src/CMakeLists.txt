@@ -81,7 +81,7 @@ file(GLOB_RECURSE include_headers
     SecureBuffer.h
 )
 
-add_library(${PROJECT_NAME} STATIC
+add_library(${PROJECT_NAME} SHARED
     StringBuffer-botan.cpp
     Cryptography-hash-openssl.cpp
     Cryptography-aes-openssl.cpp
