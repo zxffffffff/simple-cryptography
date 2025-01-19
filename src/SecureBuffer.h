@@ -6,6 +6,7 @@
 **
 ****************************************************************************/
 #pragma once
+#include "define.h"
 #include "StringBuffer.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
@@ -17,7 +18,7 @@
 #endif
 
 // AES Encrypt
-class SecureBuffer
+class SIMPLE_CRYPTOGRAPHY_LIB_API SecureBuffer
 {
 private:
     std::unique_ptr<class SecureBufferPriv> priv;

@@ -6,6 +6,7 @@
 **
 ****************************************************************************/
 #pragma once
+#include "define.h"
 #include <string>
 #include <cstring>
 #include <vector>
@@ -24,7 +25,7 @@
 #endif
 
 // std::vector<uint8_t>
-class StringBuffer
+class SIMPLE_CRYPTOGRAPHY_LIB_API StringBuffer
 {
 private:
     std::unique_ptr<class StringBufferPriv> priv;

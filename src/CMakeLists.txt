@@ -76,6 +76,7 @@ file(GLOB_RECURSE include_headers
     common/cpp_def.h
     common/common.h
     common/chrono.h
+    define.h
     StringBuffer.h
     Cryptography.h
     SecureBuffer.h
@@ -91,6 +92,11 @@ add_library(${PROJECT_NAME} SHARED
     Cryptography-kyber-liboqs.cpp
     SecureBuffer.cpp
     ${include_headers}
+)
+
+# dynamic 导出宏
+target_compile_definitions(${PROJECT_NAME}
+    PRIVATE SIMPLE_CRYPTOGRAPHY_LIB_EXPORT
 )
 
 target_link_libraries(${PROJECT_NAME}

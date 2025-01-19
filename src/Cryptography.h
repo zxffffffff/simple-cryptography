@@ -6,6 +6,7 @@
 **
 ****************************************************************************/
 #pragma once
+#include "define.h"
 #include "StringBuffer.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
@@ -16,7 +17,7 @@
 #pragma warning(disable : 4566)
 #endif
 
-class Cryptography
+class SIMPLE_CRYPTOGRAPHY_LIB_API Cryptography
 {
 public:
     // 哈希
