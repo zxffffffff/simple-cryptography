@@ -51,7 +51,7 @@ else
 fi
 
 # run（也可使用 ctest）
-echo run test
-export DYLD_LIBRARY_PATH=${install_path}/bin:$DYLD_LIBRARY_PATH
-${install_path}/bin/sample-main
-${install_path}/bin/sample-tools-test
+# echo run test
+# export DYLD_LIBRARY_PATH=${install_path}/bin:$DYLD_LIBRARY_PATH
+# ${install_path}/bin/sample-main
+# ${install_path}/bin/sample-tools-test

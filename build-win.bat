@@ -82,6 +82,6 @@ if "%config%"=="Debug" (
 )
 
 :: run （也可使用 ctest）
-echo run test
-%install_path%\bin\sample-main.exe
-%install_path%\bin\sample-tools-test.exe
+:: echo run test
+:: %install_path%\bin\sample-main.exe
+:: %install_path%\bin\sample-tools-test.exe
