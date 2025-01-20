@@ -82,7 +82,7 @@ file(GLOB_RECURSE include_headers
     SecureBuffer.h
 )
 
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
     StringBuffer-botan.cpp
     Cryptography-hash-openssl.cpp
     Cryptography-aes-openssl.cpp
@@ -95,9 +95,9 @@ add_library(${PROJECT_NAME} SHARED
 )
 
 # dynamic 导出宏
-target_compile_definitions(${PROJECT_NAME}
-    PRIVATE SIMPLE_CRYPTOGRAPHY_LIB_EXPORT
-)
+#target_compile_definitions(${PROJECT_NAME}
+#    PRIVATE SIMPLE_CRYPTOGRAPHY_LIB_EXPORT
+#)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC fmt::fmt-header-only
